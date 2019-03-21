@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% block title %}Portfolio | {{ photoInfo.photo.title._content }}{% endblock %}
+{% block stylesheets %}
+    .card {
+        background-color: #424242;
+        color: #fff;
+    }
+    .btn-primary, html body div.container div.container-fluid div#collapseExample.collapse.show div.card.card-body a {
+        color: #9C27C5 !important;
+        font-weight: bold;
+    }
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="container-fluid">
+        <img class="img-fluid" src="{{ photo }}" alt=""><br><br>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            More
+        </button>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <div class="row">
+                    <div class="float-left col-sm-1">
+                        <img src="{{ avatar }}" class="rounded-circle mx-auto d-block" style="margin: 0 !important;" alt="...">
+                    </div>
+                    <div class="col-sm-3">
+                        <p>{{ photoInfo.photo.owner.username }}</p>
+                        <p>{{ photoInfo.photo.title._content }}</p>
+                        <p>{{ photoInfo.photo.description._content }}</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>Views : {{ photoInfo.photo.views }} | Favorites : {{ faves }} | Comments : {{ photoInfo.photo.comments._content }}</p>
+                    </div>
+                    <div class="col-sm-auto">
+                        <a href="{{ photoInfo.photo.urls.url.0._content }}">See it on Flickr</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% if comments.comments.comment != '' %}
+                            <p>Comments :</p>
+                            {% for comments in comments.comments.comment %}
+                                <a href="https://www.flickr.com/photos/{{ comments.author }}">{{ comments.authorname }}</a> : {{ comments._content }} <br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

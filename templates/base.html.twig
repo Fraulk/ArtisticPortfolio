@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Portfolio{% endblock %}</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+        
+        <style>
+          .nav {
+              background-color: #9C27B0 !important;
+          }
+          .vert-align {
+              display: inline-block;
+              vertical-align: middle;
+              float: none;
+              padding: 0.25em;
+          }
+          .resize {
+              min-height: 291px;
+              max-height: 291px;
+          }
+          body {
+            background-color: #212121 !important;
+            color: white !important;
+          }
+          .img-thumbnail {
+            background-color: #424242;
+            border-color: #424242;
+            box-shadow: 0 2px 7px rgb(0, 0, 0);
+          }
+          .center {
+            text-align: center;
+          }
+        {% block stylesheets %}{% endblock %}
+        </style>
+    </head>
+    <body>
+        <ul class="nav nav-tabs bg-primary">
+          <li class="nav-item">
+            <a class="nav-link {% if active == 'index' %}active{% endif %}" href="{{ path('index') }}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if active == 'list' %}active{% endif %}" href="{{ path('photos') }}">Photos</a>
+          </li>
+          {# <li class="nav-item">
+            <a class="nav-link" href="">Another link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Disabled</a>
+          </li> #}
+        </ul>
+        {% block body %}
+        
+        {% endblock %}
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
+        <script>$(document).ready(function() { $('body').bootstrapMaterialDesign(); });</script>
+        {% block javascripts %}
+        
+        {% endblock %}
+    </body>
+</html>
