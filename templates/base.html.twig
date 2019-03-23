@@ -32,6 +32,14 @@
           .center {
             text-align: center;
           }
+          .btn.btn-primary {
+              color: #9C27C5 !important;
+              font-weight: bold;
+          }
+          .card {
+              background-color: #424242;
+              color: #fff;
+          }
         {% block stylesheets %}{% endblock %}
         </style>
     </head>
@@ -43,10 +51,10 @@
           <li class="nav-item">
             <a class="nav-link {% if active == 'list' %}active{% endif %}" href="{{ path('photos') }}">Photos</a>
           </li>
-          {# <li class="nav-item">
-            <a class="nav-link" href="">Another link</a>
-          </li>
           <li class="nav-item">
+            <a class="nav-link {% if active == 'about' %}active{% endif %}" href="{{ path('about') }}">About</a>
+          </li>
+          {# <li class="nav-item">
             <a class="nav-link" href="">Disabled</a>
           </li> #}
         </ul>

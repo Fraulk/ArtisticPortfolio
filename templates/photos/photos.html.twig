@@ -2,17 +2,15 @@
 
 {% block title %}Portfolio | Photos{% endblock %}
 {% block stylesheet %}
-<style>
-.vert-align {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
-}
-
-</style>
 {% endblock %}
 {% block body %}
 
+<div class="container-lg">
+<form action="" method="post">
+    <input type="text" name="random" value="random" hidden>
+    <button type="submit" class="btn btn-primary">Randomize</button>
+</form>
+</div>
 <div class="container-fluid">
     <div class="row justify-content-md-center">
         {% for photo in photos %}

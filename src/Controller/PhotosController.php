@@ -32,6 +32,10 @@ class PhotosController extends AbstractController
             $photos["photo"] = "https://farm".$photo["farm"].".staticflickr.com/".$photo["server"]."/".$photo["id"]."_".$photo["secret"]."_z.jpg";
             $photos["id"] = $photo["id"];
             $allPhotos[] = $photos;
+            if (isset($_POST['random'])) {
+                if($_POST['random'] != '' || $_POST['random'] != null)
+                    shuffle($allPhotos);
+            }
         }
         // dump($allPhotos);
         // die();
@@ -67,6 +71,15 @@ class PhotosController extends AbstractController
             'faves' => $faves,
             'comments' => $comments,
             'active' => ''
+        ]);
+    }
+
+    /**
+     * @Route("/about", name="about")
+     */
+    public function about() {
+        return $this->render('photos/about.html.twig', [
+            'active' => 'about'
         ]);
     }
 }
