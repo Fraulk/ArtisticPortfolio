@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-require("../public/apiKey.php");
+require("..\\public\\apiKey.php");
 
 class PhotosController extends AbstractController
 {
