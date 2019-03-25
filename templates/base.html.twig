@@ -52,11 +52,11 @@
             <a class="nav-link {% if active == 'list' %}active{% endif %}" href="{{ path('photos') }}">Photos</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link {% if active == 'collection' %}active{% endif %}" href="{{ path('collection') }}">Collection</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link {% if active == 'about' %}active{% endif %}" href="{{ path('about') }}">About</a>
           </li>
-          {# <li class="nav-item">
-            <a class="nav-link" href="">Disabled</a>
-          </li> #}
         </ul>
         {% block body %}
         

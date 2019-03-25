@@ -25,7 +25,7 @@ class PhotosController extends AbstractController
      */
     public function listPhotos(SerializerInterface $serial)
     {
-        $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=164696274@N08&format=json&nojsoncallback=1");
+        $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
         $photosDecoded = $serial->decode($photosRaw, 'json');
         foreach ($photosDecoded["photos"]["photo"] as $photo) {
             $photos = null;
@@ -37,10 +37,6 @@ class PhotosController extends AbstractController
                     shuffle($allPhotos);
             }
         }
-        // dump($allPhotos);
-        // die();
-
-        // flickr.photos.getFavorites
 
         return $this->render('photos/photos.html.twig', [
             'photos' => $allPhotos,
@@ -71,6 +67,22 @@ class PhotosController extends AbstractController
             'faves' => $faves,
             'comments' => $comments,
             'active' => ''
+        ]);
+    }
+
+    /**
+     * @Route("/collection", name="collection")
+     */
+    public function collection(SerializerInterface $serial) {
+        $collections = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
+        $collections = $serial->decode($collections, 'json');
+        foreach ($collections["photosets"]["photoset"] as $col) {
+            $collection[] = "https://farm".$col["farm"].".staticflickr.com/".$col["server"]."/".$col["primary"]."_".$col["secret"]."_q.jpg";
+        }
+
+        return $this->render("photos/collection.html.twig", [
+            'collections' => $collection,
+            'active' => 'collection'
         ]);
     }
 
