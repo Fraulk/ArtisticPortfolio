@@ -12,3 +12,7 @@ define('apiKey', 'your api key here');
 define('userId', 'user@id');
 ?>
 ```
+
+## Example
+
+![example](public/photos.jpg)

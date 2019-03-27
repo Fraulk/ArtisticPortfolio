@@ -5,7 +5,6 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-require("..\\public\\apiKey.php");
 
 class PhotosController extends AbstractController
 {
@@ -25,6 +24,7 @@ class PhotosController extends AbstractController
      */
     public function listPhotos(SerializerInterface $serial)
     {
+        require("..\\public\\apiKey.php");
         $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
         $photosDecoded = $serial->decode($photosRaw, 'json');
         foreach ($photosDecoded["photos"]["photo"] as $photo) {
@@ -48,6 +48,7 @@ class PhotosController extends AbstractController
      * @Route("/photo/{id}", name="photoShow")
      */
     public function showPhoto($id, SerializerInterface $serial){
+        require("..\\public\\apiKey.php");
         $photosInfoRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
         $photoInfo = $serial->decode($photosInfoRaw, 'json');
         $photo = "https://farm".$photoInfo["photo"]["farm"].".staticflickr.com/".$photoInfo["photo"]["server"]."/".$photoInfo["photo"]["id"]."_".$photoInfo["photo"]["originalsecret"]."_o.".$photoInfo["photo"]["originalformat"];
@@ -74,6 +75,7 @@ class PhotosController extends AbstractController
      * @Route("/collection", name="collection")
      */
     public function collection(SerializerInterface $serial) {
+        require("..\\public\\apiKey.php");
         $collections = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
         $collections = $serial->decode($collections, 'json');
         foreach ($collections["photosets"]["photoset"] as $col) {
