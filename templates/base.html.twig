@@ -7,8 +7,9 @@
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
         
         <style>
+        {% block stylesheets %}{% endblock %}
           .nav {
-              background-color: #9C27B0 !important;
+              background-color: {{ themeColor }} !important;
           }
           .vert-align {
               display: inline-block;
@@ -21,26 +22,36 @@
               max-height: 291px;
           }
           body {
-            background-color: #212121 !important;
-            color: white !important;
+            background-color: {{ darkMode }} !important;
+            color: {% if darkMode == '#212121' %}white{% endif %} !important;
           }
           .img-thumbnail {
-            background-color: #424242;
-            border-color: #424242;
+            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
+            border-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
             box-shadow: 0 2px 7px rgb(0, 0, 0);
           }
           .center {
             text-align: center;
           }
           .btn.btn-primary {
-              color: #9C27C5 !important;
+              color: {{ themeColor }} !important;
               font-weight: bold;
           }
           .card {
-              background-color: #424242;
-              color: #fff;
+              background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
+              color: {% if darkMode == '#212121' %}white{% endif %} !important;
           }
-        {% block stylesheets %}{% endblock %}
+          .col-row {
+            padding: 50px;
+            margin-top: 20px;
+            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
+            border-radius: 7px;
+            box-shadow: 0 2px 7px rgb(0, 0, 0);
+          }
+          .btn-primary {
+            text-decoration: none !important;
+            color: {{ themeColor }} !important;
+          }
         </style>
     </head>
     <body>

@@ -1,18 +1,25 @@
+{% set themeColor = themeColor %}
+{% set darkMode = darkMode %}
 {% extends "base.html.twig" %}
 
-{% block title %}Portfolio | Welcome{% endblock %}
+{% block title %}Portfolio | Collection{% endblock %}
 
 {% block body %}
 <div class="container">
-    {% for collection in collections %}
-        <div class="row md-1">
-            <div class="col-sm-2">
-                <img src="{{ collection }}" alt="" class="rounded-circle">
+    {% for collection in collections.photosets.photoset %}
+        <a href="" class="btn-primary">
+            <div class="row col-row">
+                <div class="col-sm-2">
+                    <img src="{{ collection.link }}" alt="" class="img-fluid rounded">
+                </div>
+                <div class="col-sm-1"></div>
+                <div class="col-sm">
+                    <h1 class="display-3">{{ collection.title._content }}</h1>
+                    <h4>{{ collection.description._content }}</h4>
+                    <p>{{ collection.photos }} photos</p>
+                </div>
             </div>
-            <div class="col-sm2">
-                <h1 class="display-3">Collection's title</h1>
-            </div>
-        </div>    
+        </a>    
     {% endfor %}
 </div>
 {% endblock %}
