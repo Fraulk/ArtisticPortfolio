@@ -1,0 +1,19 @@
+{% set themeColor = themeColor %}
+{% set darkMode = darkMode %}
+{% extends 'base.html.twig' %}
+
+{% block title %}Portfolio | {{ photos.photoset.title }}{% endblock %}
+{% block stylesheet %}{% endblock %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        {% for photo in photos.photoset.photo %}
+            <div class="col-{breakpoint}-auto vert-align">
+                <a href="{{ path('photoShow', {'id' : photo.id}) }}"><img class="resize img-thumbnail" src="{{ photo.link }}" alt=""></a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

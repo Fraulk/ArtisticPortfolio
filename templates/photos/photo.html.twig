@@ -8,11 +8,17 @@
         color: #9C27C5 !important;
         font-weight: bold;
     }
+    img {
+        display: block;
+        max-height: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 {% endblock %}
 {% block body %}
 <div class="container">
     <div class="container-fluid">
-        <img class="img-fluid" src="{{ photo }}" alt=""><br><br>
+        <img class="img-fluid" src="{{ photo }}" alt="photo"><br><br>
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
             More
         </button>

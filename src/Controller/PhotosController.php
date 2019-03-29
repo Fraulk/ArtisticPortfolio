@@ -109,6 +109,30 @@ class PhotosController extends AbstractController
     }
 
     /**
+     * @Route("/collection/{id}", name="collPhotos")
+     */
+    public function getPhotosFromCollection($id, SerializerInterface $serial) {
+        require("..\\public\\apiKey.php");
+        require("..\\public\\parameters.php");
+        $themeColor = themeColor;
+        $darkMode = darkMode == 1 ? "#212121" : "#fff";
+
+        $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=".apiKey."&photoset_id=".$id."&user_id=".userId."&format=json&nojsoncallback=1");
+        $photos = $serial->decode($photos, 'json');
+
+        foreach ($photos["photoset"]["photo"] as $key => $col) {
+            $photos["photoset"]["photo"][$key]["link"] = "https://farm".$col["farm"].".staticflickr.com/".$col["server"]."/".$col["id"]."_".$col["secret"]."_z.jpg";
+        }
+
+        return $this->render('photos/collectionPhotos.html.twig', [
+            'photos' => $photos,
+            'active' => 'collection',
+            'themeColor' => $themeColor,
+            'darkMode' => $darkMode
+        ]);
+    }
+
+    /**
      * @Route("/about", name="about")
      */
     public function about() {

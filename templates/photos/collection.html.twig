@@ -7,7 +7,7 @@
 {% block body %}
 <div class="container">
     {% for collection in collections.photosets.photoset %}
-        <a href="" class="btn-primary">
+        <a href="collection/{{ collection.id }}" class="btn-primary">
             <div class="row col-row">
                 <div class="col-sm-2">
                     <img src="{{ collection.link }}" alt="" class="img-fluid rounded">
