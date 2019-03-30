@@ -8,16 +8,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PhotosController extends AbstractController
 {
+    const darkMode = 1;
+    const themeColor = "#9C27B0"; // don't forget to change the text color in css if it's too luminous
+
     /**
      * @Route("/", name="index")
      */
-    public function index() {
-        require("..\\public\\parameters.php");
-        $themeColor = themeColor;
-        $darkMode = darkMode == 1 ? "#212121" : "#fff";
+    public function index()
+    {
+        $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
         return $this->render('photos/index.html.twig', [
             'active' => 'index',
-            'themeColor' => $themeColor,
+            'themeColor' => PhotosController::themeColor,
             'darkMode' => $darkMode
         ]);
     }
@@ -27,10 +29,8 @@ class PhotosController extends AbstractController
      */
     public function listPhotos(SerializerInterface $serial)
     {
-        require("..\\public\\apiKey.php");
-        require("..\\public\\parameters.php");
-        $themeColor = themeColor;
-        $darkMode = darkMode == 1 ? "#212121" : "#fff";
+        require_once("..\\public\\apiKey.php");
+        $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
         $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
         $photosDecoded = $serial->decode($photosRaw, 'json');
         foreach ($photosDecoded["photos"]["photo"] as $photo) {
@@ -39,15 +39,16 @@ class PhotosController extends AbstractController
             $photos["id"] = $photo["id"];
             $allPhotos[] = $photos;
             if (isset($_POST['random'])) {
-                if($_POST['random'] != '' || $_POST['random'] != null)
+                if ($_POST['random'] != '' || $_POST['random'] != null) {
                     shuffle($allPhotos);
+                }
             }
         }
 
         return $this->render('photos/photos.html.twig', [
             'photos' => $allPhotos,
             'active' => 'list',
-            'themeColor' => $themeColor,
+            'themeColor' => PhotosController::themeColor,
             'darkMode' => $darkMode
         ]);
     }
@@ -55,11 +56,10 @@ class PhotosController extends AbstractController
     /**
      * @Route("/photo/{id}", name="photoShow")
      */
-    public function showPhoto($id, SerializerInterface $serial){
-        require("..\\public\\apiKey.php");
-        require("..\\public\\parameters.php");
-        $themeColor = themeColor;
-        $darkMode = darkMode == 1 ? "#212121" : "#fff";
+    public function showPhoto($id, SerializerInterface $serial)
+    {
+        require_once("..\\public\\apiKey.php");
+        $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
         $photosInfoRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
         $photoInfo = $serial->decode($photosInfoRaw, 'json');
         $photo = "https://farm".$photoInfo["photo"]["farm"].".staticflickr.com/".$photoInfo["photo"]["server"]."/".$photoInfo["photo"]["id"]."_".$photoInfo["photo"]["originalsecret"]."_o.".$photoInfo["photo"]["originalformat"];
@@ -69,8 +69,9 @@ class PhotosController extends AbstractController
         $faves = count($faves["photo"]["total"]);
         $comments = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
         $comments = $serial->decode($comments, 'json');
-        if (!isset($comments["comments"]["comment"]))
+        if (!isset($comments["comments"]["comment"])) {
             $comments["comments"]["comment"] = '';
+        }
 
         return $this->render('photos/photo.html.twig', [
             'photo' => $photo,
@@ -79,7 +80,7 @@ class PhotosController extends AbstractController
             'faves' => $faves,
             'comments' => $comments,
             'active' => '',
-            'themeColor' => $themeColor,
+            'themeColor' => PhotosController::themeColor,
             'darkMode' => $darkMode
         ]);
     }
@@ -87,11 +88,10 @@ class PhotosController extends AbstractController
     /**
      * @Route("/collection", name="collection")
      */
-    public function collection(SerializerInterface $serial) {
-        require("..\\public\\apiKey.php");
-        require("..\\public\\parameters.php");
-        $themeColor = themeColor;
-        $darkMode = darkMode == 1 ? "#212121" : "#fff";
+    public function collection(SerializerInterface $serial)
+    {
+        require_once("..\\public\\apiKey.php");
+        $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
         $collections = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
         $collections = $serial->decode($collections, 'json');
         $pos = 0;
@@ -103,7 +103,7 @@ class PhotosController extends AbstractController
         return $this->render("photos/collection.html.twig", [
             'collections' => $collections,
             'active' => 'collection',
-            'themeColor' => $themeColor,
+            'themeColor' => PhotosController::themeColor,
             'darkMode' => $darkMode
         ]);
     }
@@ -111,11 +111,10 @@ class PhotosController extends AbstractController
     /**
      * @Route("/collection/{id}", name="collPhotos")
      */
-    public function getPhotosFromCollection($id, SerializerInterface $serial) {
-        require("..\\public\\apiKey.php");
-        require("..\\public\\parameters.php");
-        $themeColor = themeColor;
-        $darkMode = darkMode == 1 ? "#212121" : "#fff";
+    public function getPhotosFromCollection($id, SerializerInterface $serial)
+    {
+        require_once("..\\public\\apiKey.php");
+        $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
 
         $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=".apiKey."&photoset_id=".$id."&user_id=".userId."&format=json&nojsoncallback=1");
         $photos = $serial->decode($photos, 'json');
@@ -127,7 +126,7 @@ class PhotosController extends AbstractController
         return $this->render('photos/collectionPhotos.html.twig', [
             'photos' => $photos,
             'active' => 'collection',
-            'themeColor' => $themeColor,
+            'themeColor' => PhotosController::themeColor,
             'darkMode' => $darkMode
         ]);
     }
@@ -135,13 +134,12 @@ class PhotosController extends AbstractController
     /**
      * @Route("/about", name="about")
      */
-    public function about() {
-        require("..\\public\\parameters.php");
-        $themeColor = themeColor;
-        $darkMode = darkMode == 1 ? "#212121" : "#fff";
+    public function about()
+    {
+        $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
         return $this->render('photos/about.html.twig', [
             'active' => 'about',
-            'themeColor' => $themeColor,
+            'themeColor' => PhotosController::themeColor,
             'darkMode' => $darkMode
         ]);
     }

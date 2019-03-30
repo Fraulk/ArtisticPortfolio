@@ -17,8 +17,8 @@ define('userId', 'user@id');
 
 ``` php
 <?php
-define("darkMode", 1);              //Dark mode On/Off
-define("themeColor", "#9C27B0");    //Theme color
+    const darkMode = 1;             //Dark mode On/Off
+    const themeColor = "#9C27B0";   //Theme color, don't forget to change the text color in css if it's too luminous
 ?>
 ```
 
