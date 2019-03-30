@@ -10,6 +10,7 @@ class PhotosController extends AbstractController
 {
     const darkMode = 1;
     const themeColor = "#9C27B0"; // don't forget to change the text color in css if it's too luminous
+    const maxPhotosPerPage = 100; // maximum is 500
 
     /**
      * @Route("/", name="index")
@@ -31,8 +32,9 @@ class PhotosController extends AbstractController
     {
         require_once("..\\public\\apiKey.php");
         $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
-        $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
+        $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&per_page=".$this::maxPhotosPerPage."&format=json&nojsoncallback=1");
         $photosDecoded = $serial->decode($photosRaw, 'json');
+        //need to clean this asap
         foreach ($photosDecoded["photos"]["photo"] as $photo) {
             $photos = null;
             $photos["photo"] = "https://farm".$photo["farm"].".staticflickr.com/".$photo["server"]."/".$photo["id"]."_".$photo["secret"]."_z.jpg";
@@ -44,12 +46,44 @@ class PhotosController extends AbstractController
                 }
             }
         }
-
+        
         return $this->render('photos/photos.html.twig', [
             'photos' => $allPhotos,
+            'pages' => $photosDecoded["photos"]["pages"],
+            'actualPage' => 1,
             'active' => 'list',
             'themeColor' => PhotosController::themeColor,
             'darkMode' => $darkMode
+            ]);
+        }
+        
+        /**
+         * @Route("/photos/{id}", name="photosPage")
+         */
+        public function listPhotosPage(SerializerInterface $serial, $id) {
+            require_once("..\\public\\apiKey.php");
+            $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
+            $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&per_page=".$this::maxPhotosPerPage."&page=".$id."&format=json&nojsoncallback=1");
+            $photosDecoded = $serial->decode($photosRaw, 'json');
+            foreach ($photosDecoded["photos"]["photo"] as $photo) {
+                $photos = null;
+                $photos["photo"] = "https://farm".$photo["farm"].".staticflickr.com/".$photo["server"]."/".$photo["id"]."_".$photo["secret"]."_z.jpg";
+                $photos["id"] = $photo["id"];
+                $allPhotos[] = $photos;
+                if (isset($_POST['random'])) {
+                    if ($_POST['random'] != '' || $_POST['random'] != null) {
+                        shuffle($allPhotos);
+                    }
+                }
+            }
+            
+            return $this->render('photos/photos.html.twig', [
+                'photos' => $allPhotos,
+                'pages' => $photosDecoded["photos"]["pages"],
+                'actualPage' => $id,
+                'active' => 'list',
+                'themeColor' => PhotosController::themeColor,
+                'darkMode' => $darkMode
         ]);
     }
 

@@ -21,6 +21,17 @@
             </div>
         {% endfor %}
     </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% for page in range(1, pages) %}
+                {% if page == actualPage %}
+                    <li class="page-item active"><span class="page-link">{{ actualPage }}<span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li class="page-item"><a href="/photos/{{ page }}" class="page-link">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
 </div>
 
 {% endblock %}

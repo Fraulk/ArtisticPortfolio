@@ -8,50 +8,64 @@
         
         <style>
         {% block stylesheets %}{% endblock %}
-          .nav {
-              background-color: {{ themeColor }} !important;
-          }
-          .vert-align {
-              display: inline-block;
-              vertical-align: middle;
-              float: none;
-              padding: 0.25em;
-          }
-          .resize {
-              min-height: 291px;
-              max-height: 291px;
-          }
-          body {
+        .nav {
+            background-color: {{ themeColor }} !important;
+        }
+        .vert-align {
+            display: inline-block;
+            vertical-align: middle;
+            float: none;
+            padding: 0.25em;
+        }
+        .resize {
+            min-height: 291px;
+            max-height: 291px;
+        }
+        body {
             background-color: {{ darkMode }} !important;
             color: {% if darkMode == '#212121' %}white{% endif %} !important;
-          }
-          .img-thumbnail {
+        }
+        .img-thumbnail {
             background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
             border-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
             box-shadow: 0 2px 7px rgb(0, 0, 0);
-          }
-          .center {
+        }
+        .center {
             text-align: center;
-          }
-          .btn.btn-primary {
-              color: {{ themeColor }} !important;
-              font-weight: bold;
-          }
-          .card {
-              background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
-              color: {% if darkMode == '#212121' %}white{% endif %} !important;
-          }
-          .col-row {
+        }
+        .btn.btn-primary {
+            color: {{ themeColor }} !important;
+            font-weight: bold;
+        }
+        .card {
+            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
+            color: {% if darkMode == '#212121' %}white{% endif %} !important;
+        }
+        .col-row {
             padding: 50px;
             margin-top: 20px;
             background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
             border-radius: 7px;
             box-shadow: 0 2px 7px rgb(0, 0, 0);
-          }
-          .btn-primary {
+        }
+        .btn-primary {
             text-decoration: none !important;
             color: {{ themeColor }} !important;
-          }
+        }
+        .page-item.active .page-link {
+            color: #fff;
+            background-color: {{ themeColor }};
+            border-color: {{ themeColor }};
+        }
+        .page-link {
+            color: {{ themeColor }};
+        }
+        .page-link:hover {
+            color: {{ themeColor }};
+        }
+        .page-link:focus {
+            box-shadow: 0 0 0 .2rem {{ themeColor }}aa;
+        }
         </style>
     </head>
     <body>
