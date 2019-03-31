@@ -1,5 +1,13 @@
 # Artistic Portfolio
 
+## Web Release branch
+
+This branch is optimized for uploading to a web server, switching from ```dev``` to ```prod``` on symfony, adding some ```.htaccess``` files.
+If you're having issues about uploading the project, Google's your best friend, (i literally took me 4 hours to make mine work lol)
+Currently i'm hosting it on a free web host, PlanetHoster, where you have to install Symfony on "Softaculous Apps Installer" and upload on the downloaded directory (almost) everything **except** the ```var/``` and ```vendor/``` directory
+
+---
+
 A basic symfony 4.x project using Flickr's API (useful for saving space on free webhosts lol)  
 Don't forget to do a ```composer update``` on the terminal to get all the dependencies
 
