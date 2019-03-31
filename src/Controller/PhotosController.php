@@ -30,7 +30,7 @@ class PhotosController extends AbstractController
      */
     public function listPhotos(SerializerInterface $serial)
     {
-        require_once("..\\public\\apiKey.php");
+        require_once("../public/apiKey.php");
         $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
         $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&per_page=".$this::maxPhotosPerPage."&format=json&nojsoncallback=1");
         $photosDecoded = $serial->decode($photosRaw, 'json');
@@ -61,7 +61,7 @@ class PhotosController extends AbstractController
          * @Route("/photos/{id}", name="photosPage")
          */
         public function listPhotosPage(SerializerInterface $serial, $id) {
-            require_once("..\\public\\apiKey.php");
+            require_once("../public/apiKey.php");
             $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
             $photosRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&per_page=".$this::maxPhotosPerPage."&page=".$id."&format=json&nojsoncallback=1");
             $photosDecoded = $serial->decode($photosRaw, 'json');
@@ -92,7 +92,7 @@ class PhotosController extends AbstractController
      */
     public function showPhoto($id, SerializerInterface $serial)
     {
-        require_once("..\\public\\apiKey.php");
+        require_once("../public/apiKey.php");
         $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
         $photosInfoRaw = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
         $photoInfo = $serial->decode($photosInfoRaw, 'json');
@@ -124,7 +124,7 @@ class PhotosController extends AbstractController
      */
     public function collection(SerializerInterface $serial)
     {
-        require_once("..\\public\\apiKey.php");
+        require_once("../public/apiKey.php");
         $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
         $collections = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
         $collections = $serial->decode($collections, 'json');
@@ -147,7 +147,7 @@ class PhotosController extends AbstractController
      */
     public function getPhotosFromCollection($id, SerializerInterface $serial)
     {
-        require_once("..\\public\\apiKey.php");
+        require_once("../public/apiKey.php");
         $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
 
         $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=".apiKey."&photoset_id=".$id."&user_id=".userId."&format=json&nojsoncallback=1");
