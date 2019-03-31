@@ -4,7 +4,7 @@ A basic symfony 4.x project using Flickr's API (useful for saving space on free 
 Don't forget to do a ```composer update``` on the terminal to get all the dependencies.  
 Don't forget to check the web-release branch if you're planning to upload it
 
-All you need to do to make it work is to create a file in ```public/``` named ```apiKey.php```
+All you need to do to make it work is to create a file in ```public/``` named ```apiKey.php```  
 Just type the following with your API key [(Get it here)](https://www.flickr.com/services/apps/create/apply/) and your user id (you can found it on your profile's URL)
 
 ``` php
