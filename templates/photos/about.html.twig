@@ -3,11 +3,17 @@
 {% extends "base.html.twig" %}
 
 {% block title %}Portfolio | About me{% endblock %}
-
+{% block stylesheets %}
+    html body div.container a {
+        color: #9C27C5 !important;
+        font-weight: bold;
+    }
+{% endblock %}
 {% block body %}
 <div class="container">
     <div class="center">
         <h1 class="display-1">About me</h1>
+        <a href="https://github.com/Fraulk/ArtisticPortfolio"><i class="fab fa-github fa-2x"></i></a>
     </div>
     
 </div>
