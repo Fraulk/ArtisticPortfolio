@@ -100,7 +100,7 @@ class PhotosController extends AbstractController
         $avatar = "http://farm".$photoInfo["photo"]["owner"]["iconfarm"].".staticflickr.com/".$photoInfo["photo"]["owner"]["iconserver"]."/buddyicons/".$photoInfo["photo"]["owner"]["nsid"].".jpg";
         $faves = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.getFavorites&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
         $faves = $serial->decode($faves, 'json');
-        $faves = count($faves["photo"]["total"]);
+        $faves = $faves["photo"]["total"];
         $comments = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
         $comments = $serial->decode($comments, 'json');
         if (!isset($comments["comments"]["comment"])) {
