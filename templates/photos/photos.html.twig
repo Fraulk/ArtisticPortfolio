@@ -9,8 +9,17 @@
 
 <div class="container-lg">
 <form action="" method="post">
-    <input type="text" name="random" value="random" hidden>
-    <button type="submit" class="btn btn-primary">Randomize</button>
+    <button type="submit" class="btn btn-primary" name="random" value="random">Randomize</button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Filter by 
+        </button>
+        <div class="dropdown-menu">
+          <button type="submit" name="filter" value="view" class="dropdown-item{% if activeFilter == 'view' %} active{% endif %}">Most viewed</button>
+          <button type="submit" name="filter" value="fave" class="dropdown-item{% if activeFilter == 'fave' %} active{% endif %}">Most favourited</button>
+          <button type="submit" name="filter" value="comment" class="dropdown-item{% if activeFilter == 'comment' %} active{% endif %}">Most commented</button>
+        </div>
+    </div>
 </form>
 </div>
 <div class="container-fluid">

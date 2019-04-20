@@ -26,10 +26,18 @@
             background-color: {{ darkMode }} !important;
             color: {% if darkMode == '#212121' %}white{% endif %} !important;
         }
+        .large-img {
+            display: block;
+            max-height: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: {% if darkMode == '#212121' %}0 2px 20px rgb(0, 0, 0);{% else %}0 2px 20px rgb(116, 116, 116);{% endif %}
+            margin-top: 3em;
+        }
         .img-thumbnail {
-            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
-            border-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
-            box-shadow: 0 2px 7px rgb(0, 0, 0);
+            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#DDD;{% endif %}
+            border-color: {% if darkMode == '#212121' %}#424242;{% else %}#DDD;{% endif %}
+            box-shadow: {% if darkMode == '#212121' %}0 2px 7px rgb(0, 0, 0);{% else %}0 2px 7px rgb(146, 146, 146);{% endif %}
         }
         .center {
             text-align: center;
@@ -39,15 +47,15 @@
             font-weight: bold;
         }
         .card {
-            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
+            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#DDD;{% endif %}
             color: {% if darkMode == '#212121' %}white{% endif %} !important;
         }
         .col-row {
             padding: 50px;
             margin-top: 20px;
-            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#CCC;{% endif %}
+            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#DDD;{% endif %}
             border-radius: 7px;
-            box-shadow: 0 2px 7px rgb(0, 0, 0);
+            box-shadow: {% if darkMode == '#212121' %}0 2px 7px rgb(0, 0, 0);{% else %}0 2px 7px rgb(146, 146, 146);{% endif %}
         }
         .btn-primary {
             text-decoration: none !important;
@@ -66,6 +74,19 @@
         }
         .page-link:focus {
             box-shadow: 0 0 0 .2rem {{ themeColor }}aa;
+        }
+        .dropdown-menu {
+            background-color: {% if darkMode == '#212121' %}#424242;{% else %}#EEE;{% endif %}
+            color: {% if darkMode == '#212121' %}white{% endif %} !important;
+        }
+        .dropdown-item {
+            color: {% if darkMode == '#212121' %}white{% endif %} !important;
+        }
+        .dropdown-item.active {
+            background-color: {% if darkMode == '#212121' %}#646464 !important;{% else %}#CCC !important;{% endif %}
+        }
+        .dropdown-item:focus, .dropdown-item:hover {
+            background-color: {% if darkMode == '#212121' %}#646464 !important;{% else %}#CCC !important;{% endif %}
         }
         </style>
     </head>
