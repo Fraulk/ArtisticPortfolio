@@ -27,6 +27,7 @@ class PhotosController extends AbstractController
     }
     
     /**
+     * List photos
      * @Route("/photos", name="photos")
      */
     public function listPhotos(SerializerInterface $serial)
@@ -34,7 +35,7 @@ class PhotosController extends AbstractController
         require_once("..\\public\\apiKey.php");
         $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
 
-        $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&per_page=".$this::maxPhotosPerPage."&extras=views&format=json&nojsoncallback=1");
+        $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&per_page=".$this::maxPhotosPerPage."&extras=views,date_upload&format=json&nojsoncallback=1");
         $photos = $serial->decode($photos, 'json');
 
         if (isset($_POST["filter"])){
@@ -55,14 +56,26 @@ class PhotosController extends AbstractController
                     // die();
                     break;
                 
-                case 'fave':
-
-                    $activeFilter = "fave";
+                case 'new':
+                    usort($photos["photos"]["photo"], function ($a, $b)
+                    {
+                        if ($a["dateupload"] == $b["dateupload"]) {
+                            return 0;
+                        }
+                        return ($a["dateupload"] > $b["dateupload"]) ? -1 : 1;
+                    });
+                    $activeFilter = "new";
                     break;
 
-                case 'comment':
-                    
-                    $activeFilter = "comment";
+                case 'old':
+                    usort($photos["photos"]["photo"], function ($a, $b)
+                    {
+                        if ($a["dateupload"] == $b["dateupload"]) {
+                            return 0;
+                        }
+                        return ($a["dateupload"] < $b["dateupload"]) ? -1 : 1;
+                    });
+                    $activeFilter = "old";
                     break;
                 
                 default:
@@ -95,6 +108,7 @@ class PhotosController extends AbstractController
     }
         
         /**
+         * List the photos by page (1, 2,...)
          * @Route("/photos/{id}", name="photosPage")
          */
         public function listPhotosPage(SerializerInterface $serial, $id) {
