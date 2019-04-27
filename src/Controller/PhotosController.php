@@ -9,8 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PhotosController extends AbstractController
 {
     const darkMode = 1;
-    const themeColor = "#9C27B0"; // don't forget to change the text color in css if it's too luminous
-    const maxPhotosPerPage = 100; // maximum is 500
+    const themeColor = "#9C27B0";   // don't forget to change the text color in css if it's too luminous
+    const maxPhotosPerPage = 100;   // maximum is 500
+    const realName = false;          // show your username or realname
 
     /**
      * @Route("/", name="index")
@@ -151,7 +152,15 @@ class PhotosController extends AbstractController
         $photoInfo = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
         $photoInfo = $serial->decode($photoInfo, 'json');
 
-        $photo = "https://farm".$photoInfo["photo"]["farm"].".staticflickr.com/".$photoInfo["photo"]["server"]."/".$photoInfo["photo"]["id"]."_".$photoInfo["photo"]["originalsecret"]."_o.".$photoInfo["photo"]["originalformat"];
+        $name = (PhotosController::realName) ? $photoInfo["photo"]["owner"]["realname"] : $photoInfo["photo"]["owner"]["username"];
+
+        // dump($photoInfo);
+        // die();
+        if(isset($photoInfo["photo"]["originalsecret"]))
+            $photo = "https://farm".$photoInfo["photo"]["farm"].".staticflickr.com/".$photoInfo["photo"]["server"]."/".$photoInfo["photo"]["id"]."_".$photoInfo["photo"]["originalsecret"]."_o.".$photoInfo["photo"]["originalformat"];
+        else
+            $photo = "https://farm".$photoInfo["photo"]["farm"].".staticflickr.com/".$photoInfo["photo"]["server"]."/".$photoInfo["photo"]["id"]."_".$photoInfo["photo"]["secret"]."_b.jpg";
+
         $avatar = "http://farm".$photoInfo["photo"]["owner"]["iconfarm"].".staticflickr.com/".$photoInfo["photo"]["owner"]["iconserver"]."/buddyicons/".$photoInfo["photo"]["owner"]["nsid"].".jpg";
 
         $faves = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.getFavorites&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
@@ -165,12 +174,17 @@ class PhotosController extends AbstractController
             $comments["comments"]["comment"] = '';
         }
 
+        $commentCount = $photoInfo["photo"]["comments"]["_content"];
+        $plural = $commentCount > 1 ? "comments" : "comment";
+
         return $this->render('photos/photo.html.twig', [
             'photo' => $photo,
             'photoInfo' => $photoInfo,
+            'name' => $name,
             'avatar' => $avatar,
             'faves' => $faves,
             'comments' => $comments,
+            'commentCount' => $plural,
             'active' => '',
             'themeColor' => PhotosController::themeColor,
             'darkMode' => $darkMode

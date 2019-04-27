@@ -8,6 +8,10 @@
         color: #9C27C5 !important;
         font-weight: bold;
     }
+    .title {
+        font-size: large;
+        font-weight: lighter;
+    }
 {% endblock %}
 {% block body %}
 <div class="container">
@@ -22,22 +26,21 @@
                     <div class="float-left col-sm-1">
                         <img src="{{ avatar }}" class="rounded-circle mx-auto d-block" style="margin: 0 !important;" alt="...">
                     </div>
-                    <div class="col-sm-3">
-                        <p>{{ photoInfo.photo.owner.username }}</p>
-                        <p>{{ photoInfo.photo.title._content }}</p>
+                    <div class="col-sm-7">
+                        <p class="display-4">{{ name }}</p>
+                        <p class="title">{{ photoInfo.photo.title._content }}</p><hr>
                         <p>{{ photoInfo.photo.description._content }}</p>
                     </div>
-                    <div class="col-sm-6">
-                        <p>Views : {{ photoInfo.photo.views }} | Favorites : {{ faves }} | Comments : {{ photoInfo.photo.comments._content }}</p>
+                    <div class="col-sm-2">
+                        <p>{{ photoInfo.photo.views }} views<br>{{ faves }} favorites<br>{{ photoInfo.photo.comments._content }} {{ commentCount }}</p>
                     </div>
                     <div class="col-sm-auto">
-                        <a href="{{ photoInfo.photo.urls.url.0._content }}">See it on Flickr</a>
+                        <a href="{{ photoInfo.photo.urls.url.0._content }}" style="float: right;">See it on Flickr</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
                         {% if comments.comments.comment != '' %}
-                            <p>Comments :</p>
                             {% for comments in comments.comments.comment %}
                                 <a href="https://www.flickr.com/photos/{{ comments.author }}">{{ comments.authorname }}</a> : {{ comments._content }} <br>
                             {% endfor %}
