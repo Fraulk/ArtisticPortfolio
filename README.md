@@ -30,7 +30,7 @@ Can be modified in the ```PhotosController.php``` file
     const darkMode = 1;             //Dark mode On/Off
     const themeColor = "#9C27B0";   //Theme color, don't forget to change the text color in css if it's too luminous
     const maxPhotosPerPage = 100;   //Number of photos to show per page, maximum is 500
-    const realName = true;          // show your username or realname
+    const realName = true;          //Show your username or realname
 ```
 Don't forget to properly [set your privacy settings](https://www.flickr.com/account/prefs/privacy/?from=privacy) if you choose realName
 ## Example

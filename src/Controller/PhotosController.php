@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Flickr;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,8 +11,8 @@ class PhotosController extends AbstractController
 {
     const darkMode = 1;
     const themeColor = "#9C27B0";   // don't forget to change the text color in css if it's too luminous
-    const maxPhotosPerPage = 100;   // maximum is 500
-    const realName = false;          // show your username or realname
+    const maxPhotosPerPage = 50;   // maximum is 500
+    const realName = false;         // show your username or realname
 
     /**
      * @Route("/", name="index")
@@ -33,74 +34,30 @@ class PhotosController extends AbstractController
      */
     public function listPhotos(SerializerInterface $serial)
     {
-        require_once("..\\public\\apiKey.php");
         $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
-
-        $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&per_page=".$this::maxPhotosPerPage."&extras=views,date_upload&format=json&nojsoncallback=1");
-        $photos = $serial->decode($photos, 'json');
+        $flickr = new Flickr($serial);
+        $photos = $flickr->getPhotosData();
 
         if (isset($_POST["filter"])){
-            /**
-             * filters, usort to sort with an item in a multidimensional array
-             */
-            switch ($_POST["filter"]) {
-                case 'view':
-                    usort($photos["photos"]["photo"], function ($a, $b)
-                    {
-                        if ($a["views"] == $b["views"]) {
-                            return 0;
-                        }
-                        return ($a["views"] > $b["views"]) ? -1 : 1;
-                    });
-                    $activeFilter = "view";
-                    // dump($photos["photos"]["photo"]);
-                    // die();
-                    break;
-                
-                case 'new':
-                    usort($photos["photos"]["photo"], function ($a, $b)
-                    {
-                        if ($a["dateupload"] == $b["dateupload"]) {
-                            return 0;
-                        }
-                        return ($a["dateupload"] > $b["dateupload"]) ? -1 : 1;
-                    });
-                    $activeFilter = "new";
-                    break;
-
-                case 'old':
-                    usort($photos["photos"]["photo"], function ($a, $b)
-                    {
-                        if ($a["dateupload"] == $b["dateupload"]) {
-                            return 0;
-                        }
-                        return ($a["dateupload"] < $b["dateupload"]) ? -1 : 1;
-                    });
-                    $activeFilter = "old";
-                    break;
-                
-                default:
-                    # code...
-                    break;
-            }
+            list($photos, $activeFilter) = $flickr->filter($_POST["filter"], $photos);
         }
-        foreach ($photos["photos"]["photo"] as $photo) {
-            
-            $photoss["photo"] = "https://farm".$photo["farm"].".staticflickr.com/".$photo["server"]."/".$photo["id"]."_".$photo["secret"]."_z.jpg";
-            $photoss["id"] = $photo["id"];
-            $allPhotos[] = $photoss;
-            //randomize
-            if (isset($_POST['random'])) {
-                if ($_POST['random'] != '' || $_POST['random'] != null) {
-                    shuffle($allPhotos);
-                }
+
+        foreach ($photos["photos"]["photo"] as $key => $photo) {
+            $photos["photos"]["photo"][$key]["link"] = "https://farm".$photo["farm"].".staticflickr.com/".$photo["server"]."/".$photo["id"]."_".$photo["secret"]."_z.jpg";
+        }
+
+        if (isset($_POST['random'])) {
+            if ($_POST['random'] != '' || $_POST['random'] != null) {
+                shuffle($photos["photos"]["photo"]);
             }
         }
         
         return $this->render('photos/photos.html.twig', [
-            'photos' => $allPhotos,
+            'photos' => $photos["photos"],
             'pages' => $photos["photos"]["pages"],
             'actualPage' => 1,
+            'startValue' => 0,
+            'endValue' => self::maxPhotosPerPage,
             'active' => 'list',
             'activeFilter' => (isset($activeFilter)) ? $activeFilter : '', //if there is an active filter, it return the name, else nothing
             'themeColor' => PhotosController::themeColor,
@@ -113,31 +70,43 @@ class PhotosController extends AbstractController
          * @Route("/photos/{id}", name="photosPage")
          */
         public function listPhotosPage(SerializerInterface $serial, $id) {
-            require_once("..\\public\\apiKey.php");
             $darkMode = PhotosController::darkMode == 1 ? "#212121" : "#fff";
+            $flickr = new Flickr($serial);
+            // $photos = ($id == 1) ? $flickr->getPhotosData() : '';
+            $startValue = 0;
+            for ($i=1; $i <= $id; $i++) { 
+                if ($i == 1)
+                    $photos = $flickr->getPhotosData();$i++;
+                $pageIdPhotos = $flickr->getPhotosData($i);
+                $photos["photos"]["photo"] = array_merge($photos["photos"]["photo"], $pageIdPhotos["photos"]["photo"]);
+                $startValue = ($id-1) * self::maxPhotosPerPage;
+                $endValue = $startValue + self::maxPhotosPerPage;
+            }
 
-            $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".apiKey."&user_id=".userId."&per_page=".$this::maxPhotosPerPage."&page=".$id."&format=json&nojsoncallback=1");
-            $photos = $serial->decode($photos, 'json');
+            if (isset($_POST["filter"])){
+                list($photos, $activeFilter) = $flickr->filter($_POST["filter"], $photos);
+            }
 
-            foreach ($photos["photos"]["photo"] as $photo) {
-                $photoss = null;
-                $photoss["photo"] = "https://farm".$photo["farm"].".staticflickr.com/".$photo["server"]."/".$photo["id"]."_".$photo["secret"]."_z.jpg";
-                $photoss["id"] = $photo["id"];
-                $allPhotos[] = $photoss;
-                if (isset($_POST['random'])) {
-                    if ($_POST['random'] != '' || $_POST['random'] != null) {
-                        shuffle($allPhotos);
-                    }
+            foreach ($photos["photos"]["photo"] as $key => $photo) {
+                $photos["photos"]["photo"][$key]["link"] = "https://farm".$photo["farm"].".staticflickr.com/".$photo["server"]."/".$photo["id"]."_".$photo["secret"]."_z.jpg";
+            }
+    
+            if (isset($_POST['random'])) {
+                if ($_POST['random'] != '' || $_POST['random'] != null) {
+                    shuffle($photos["photos"]["photo"]);
                 }
             }
             
-            return $this->render('photos/photos.html.twig', [
-                'photos' => $allPhotos,
-                'pages' => $photos["photos"]["pages"],
-                'actualPage' => $id,
-                'active' => 'list',
-                'themeColor' => PhotosController::themeColor,
-                'darkMode' => $darkMode
+        return $this->render('photos/photos.html.twig', [
+            'photos' => $photos["photos"],
+            'pages' => $photos["photos"]["pages"],
+            'actualPage' => $id,
+            'startValue' => (isset($startValue)) ? $startValue : 0,
+            'endValue' => (isset($endValue)) ? $endValue : 50,
+            'active' => 'list',
+            'activeFilter' => (isset($activeFilter)) ? $activeFilter : '', //if there is an active filter, it return the name, else nothing
+            'themeColor' => PhotosController::themeColor,
+            'darkMode' => $darkMode
         ]);
     }
 

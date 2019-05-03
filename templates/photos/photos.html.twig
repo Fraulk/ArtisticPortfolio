@@ -10,7 +10,8 @@
 <div class="container-lg">
 <form action="" method="post">
     <button type="submit" class="btn btn-primary" name="random" value="random">Randomize</button>
-      <div class="btn-group">
+    {# {% if actualPage == 1 %} #}
+    <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Filter by 
         </button>
@@ -20,14 +21,17 @@
           <button type="submit" name="filter" value="old" class="dropdown-item{% if activeFilter == 'old' %} active{% endif %}">Oldest</button>
         </div>
     </div>
+    {# {% endif %} #}
 </form>
 </div>
 <div class="container-fluid">
     <div class="row justify-content-md-center">
-        {% for photo in photos %}
+        {% for photo in photos.photo %}
+            {% if loop.index >= startValue and loop.index <= endValue %}
             <div class="col-{breakpoint}-auto vert-align">
-                <a href="{{ path('photoShow', {'id' : photo.id}) }}"><img class="resize img-thumbnail" src="{{ photo.photo }}" alt=""></a>
+                <a href="{{ path('photoShow', {'id' : photo.id}) }}"><img class="resize img-thumbnail" src="{{ photo.link }}" alt=""></a>
             </div>
+            {% endif %}
         {% endfor %}
     </div>
     <nav aria-label="Page navigation">
