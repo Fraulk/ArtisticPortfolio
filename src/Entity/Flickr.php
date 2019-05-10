@@ -120,9 +120,61 @@ class Flickr
         return $this;
     }
 
+    public function getPhotoData($id) {
+        $photoInfo = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
+        $photoInfo = $this->serial->decode($photoInfo, 'json');
+
+        $name = (PhotosController::realName) ? $photoInfo["photo"]["owner"]["realname"] : $photoInfo["photo"]["owner"]["username"];
+
+        if(isset($photoInfo["photo"]["originalsecret"]))
+            $photo = "https://farm".$photoInfo["photo"]["farm"].".staticflickr.com/".$photoInfo["photo"]["server"]."/".$photoInfo["photo"]["id"]."_".$photoInfo["photo"]["originalsecret"]."_o.".$photoInfo["photo"]["originalformat"];
+        else
+            $photo = "https://farm".$photoInfo["photo"]["farm"].".staticflickr.com/".$photoInfo["photo"]["server"]."/".$photoInfo["photo"]["id"]."_".$photoInfo["photo"]["secret"]."_b.jpg";
+
+        $avatar = "http://farm".$photoInfo["photo"]["owner"]["iconfarm"].".staticflickr.com/".$photoInfo["photo"]["owner"]["iconserver"]."/buddyicons/".$photoInfo["photo"]["owner"]["nsid"].".jpg";
+
+        $faves = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.getFavorites&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
+        $faves = $this->serial->decode($faves, 'json');
+        $faves = $faves["photo"]["total"];
+        
+        $comments = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photos.comments.getList&api_key=".apiKey."&photo_id=".$id."&format=json&nojsoncallback=1");
+        $comments = $this->serial->decode($comments, 'json');
+
+        if (!isset($comments["comments"]["comment"])) {
+            $comments["comments"]["comment"] = '';
+        }
+
+        $commentCount = $photoInfo["photo"]["comments"]["_content"];
+        $plural = $commentCount > 1 ? "comments" : "comment";
+
+        return array($photoInfo, $name, $photo, $avatar, $faves, $comments, $plural);
+    }
+
     public function getPhotosData($page = 1) {
         $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=".$this->apiKey."&user_id=".$this->userId."&per_page=".$this->maxPhotosPerPage."&page=".$page."&extras=views,date_upload&format=json&nojsoncallback=1");
         $photos = $this->serial->decode($photos, 'json');
+
+        return $photos;
+    }
+
+    public function getCollections() {
+        $collections = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=".apiKey."&user_id=".userId."&format=json&nojsoncallback=1");
+        $collections = $this->serial->decode($collections, 'json');
+
+        foreach ($collections["photosets"]["photoset"] as $key => $col) {
+            $collections["photosets"]["photoset"][$key]["link"] = "https://farm".$col["farm"].".staticflickr.com/".$col["server"]."/".$col["primary"]."_".$col["secret"]."_q.jpg";
+        }
+
+        return $collections;
+    }
+
+    public function getPhotosFromCollection($id) {
+        $photos = file_get_contents("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=".apiKey."&photoset_id=".$id."&user_id=".userId."&format=json&nojsoncallback=1");
+        $photos = $this->serial->decode($photos, 'json');
+
+        foreach ($photos["photoset"]["photo"] as $key => $col) {
+            $photos["photoset"]["photo"][$key]["link"] = "https://farm".$col["farm"].".staticflickr.com/".$col["server"]."/".$col["id"]."_".$col["secret"]."_z.jpg";
+        }
 
         return $photos;
     }
